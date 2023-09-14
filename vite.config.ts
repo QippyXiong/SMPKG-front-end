@@ -18,7 +18,7 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/search': 'http://127.0.0.1:5000'
+      '/search': 'http://127.0.0.1:5200'
     }
   }
 });

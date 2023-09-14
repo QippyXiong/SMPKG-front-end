@@ -1,75 +1,39 @@
+import { entityCategories, relationCategories, type_map, entityCategoriesZh, relationCategoriesZh, zhTypeMap, candidateKeyMap } from './MaintenanceWorker'
 
-let entityNames = ['MaintenanceWorker', 'MaintenanceRecord', 'Capacity']
-let relationNames = ['RATE', 'PERFORMED']
-
-function getRecordType(type_name: string | undefined): 'entity' | 'relation' | undefined
+export function getRecordCase(type_name: string | undefined): ['entity' | 'relation' | undefined, number]
 {
-	if( !type_name ) return undefined
+	if( !type_name ) return [undefined, -1]
 
-	if( entityNames.findIndex(item => item == type_name) != -1 )
-		return 'entity'
+	let index = entityCategories.findIndex(item => item == type_name)
 
-	if( relationNames.findIndex(item => item == type_name) != -1 )
-		return 'relation'
-	console.log("unkown record type: " + type_name)
-	return undefined
+	if(index != -1)
+		return ['entity', index]
+
+	index = relationCategories.findIndex(item => item == type_name)
+	if( index != -1 )
+		return ['relation', index]
+	console.error("unkown record type: " + type_name)
+	return [undefined, -1]
+}
+
+export function getTypeZhkeyMap(type: string)
+{
+	return type_map[type]
+}
+
+export function zhRelationKeyZhMap(attribName: string, zhType: string): string
+{
+	let enTypeIndice = relationCategoriesZh.findIndex(v => v==zhType)
+	if(enTypeIndice == -1) console.error(`unkown attrb: ${attribName} for type: ${zhType}`)
+	return enkeyMapZhkey(attribName, relationCategories[enTypeIndice])
 }
 
 // 将英文key值映射到中文key值，如果找不到就返回输入的英文key值，并在控制台打印消息
-function enkeyMapZhkey(attribName: string, type: string): string
+export function enkeyMapZhkey(attribName: string, type: string | number): string
 {
+	if(typeof type === 'number') type = getEntityCategory(type)
 
-	let type_map: Record<string, Record<string, string>> = 
-	//interface MaintenanceWorker
-	{
-		MaintenanceWorker: 
-		{
-			id 				: "工号/志愿者编号",
-			name			: "姓名",
-			sex 			: "性别",
-			nation			: "民族",
-			phone			: "联系方式",
-			birth			: "出生日期",
-			live_in			: "居住地址",
-			employ_date 	: "入职时间",
-			work_post 		: "岗位",
-			work_level		: "岗位级别",
-			department 		: "部门",
-		},
-
-		//interface MaintenancePerformance
-		MaintenancePerformance:
-		{
-			malfunc_type	: "故障类型",
-			performance		: "维修效果",
-		},
-
-		//interface MaintenanceRecord
-		MaintenanceRecord :
-		{
-			malfunction 	:  "故障内容",
-			place			:  "故障位置",
-			malfunc_time	:  "故障上报时间",
-			begin_time		:  "维修开始时间",
-			complish_time	:  "维修完成时间",
-			review			:  "返修评价",
-		},
-
-		Capacity :
-		{
-			name 		 : "能力名 唯一标识",
-			description  : "描述",
-			rule		 : "能力规则",
-			rate		 : "维修能力关联的人员实体"
-		}
-	}
-
-	function getMap(type: string): Record<string, string>
-	{
-		return type_map[type]
-	}
-
-	let key_map = getMap(type)
+	let key_map = getTypeZhkeyMap(type)
 	if(key_map) {
 		let key = key_map[attribName]
 		if(key === void 0)
@@ -82,7 +46,14 @@ function enkeyMapZhkey(attribName: string, type: string): string
 	}
 }
 
-function parseEdgePropertiesIntoString(properties: Record<string, any>, type: string): string | undefined
+export function zhkeyMapEnkey(attribName: string, type: string | number): string
+{
+	if(typeof type == 'number') type = getEntityCategory(type)
+
+	return zhTypeMap[type][attribName]
+}
+
+export function parseEdgePropertiesIntoString(properties: Record<string, any>, type: string): string | undefined
 {
 	switch(type)
 	{
@@ -95,18 +66,21 @@ function parseEdgePropertiesIntoString(properties: Record<string, any>, type: st
 	}
 }
 
-function getMainAttrib(record: Record<string, any>, type: string): string
+export function getMainAttrib(record: Record<string, any> | undefined, type: string | number): string
 {
-	['MaintenanceWorker', 'MaintenanceRecord', 'Capacity', 'MaintenancePerformance']
+	// ['MaintenanceWorker', 'MaintenanceRecord', 'Capacity', 'MaintenancePerformance']
+	if(!record) return 'undefined'
+	if(typeof type === 'number') type = getEntityCategory(type)
 	switch(type) {
 		case 'MaintenanceWorker': return String(record["id"])
-		case 'MaintenanceRecord': return record["malfunc_time"] + ": " + record["place"] + "-" + record["malfunction"]
+		case 'MaintenanceRecord': return record["malfunction"]
 		case 'Capacity': return String(record["name"])
+		case 'Property': return String(record)
 	}
 	return 'undefined'
 }
 
-const parseEdgeSourceOrTarget = (source: any) => (typeof source == 'string' ? source : getMainAttrib(source.properties || source, source.type || "MaintenanceRecord"))
+export const parseEdgeSourceOrTarget = (source: any) => (typeof source == 'string' ? source : getMainAttrib(source.properties || source, source.type || "MaintenanceRecord"))
 
 let EntityColors = [
 	"#f44336", 
@@ -121,13 +95,41 @@ let EntityColors = [
 
 let typeColorMap: Record<string, string> = {}
 
-entityNames.forEach((v, i)=> typeColorMap[v] = EntityColors[i])
+entityCategories.forEach((v, i)=> typeColorMap[v] = EntityColors[i])
 
-function mapTypeColor(type: string): string
+export function getTypeColor(type: string): string
 {
 	return typeColorMap[type]
 }
 
-export {
-	enkeyMapZhkey, getRecordType, parseEdgePropertiesIntoString, getMainAttrib, parseEdgeSourceOrTarget, mapTypeColor
+export function getEntityCategory(index: number): string
+{
+	return entityCategories[index]
+}
+
+export function getRelationCategory(index: number): string
+{
+	return relationCategories[index]
+}
+
+export function enTypeMapZhType(type: string): string
+{
+	return entityCategoriesZh[entityCategories.findIndex(item => item == type)]
+}
+
+export function parseCandiateProperty(properties: Record<string, string>, type: string | number)
+{
+	if(typeof type === 'number') type = getEntityCategory(type)
+	let cks = candidateKeyMap[type]
+	let ret_val: Record<string, string> = {}
+	for(let ck of cks)
+		ret_val[ck] = properties[ck]
+	return ret_val
+}
+
+export function enRelationMapZhRelation(relation: string)
+{
+	let i = relationCategories.findIndex(v => v == relation)
+	if(i == -1) console.error(`unkown relation: ${ relation }`)
+	return relationCategoriesZh[i]
 }

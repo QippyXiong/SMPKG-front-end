@@ -9,7 +9,8 @@
           text-color="#fff"
           active-text-color="#fff"
           :collapse="false"
-          default-active="1"
+          :default-active="'1'"
+          :router="true"
         >
         <!--theme #7e9cff-->
           <!--begin logo-->
@@ -17,8 +18,8 @@
             <span style="color:#fff;">地铁维保人员图谱</span>
           </div>
           <!--end logo-->
-          <ElMenuItem index="1">
-            <ElIcon></ElIcon>
+          <ElMenuItem route="/graph" index="1">
+            <ElIcon><DataAnalysis/></ElIcon>
             <span>人员图谱查询</span>
           </ElMenuItem>
         </ElMenu>
@@ -33,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-
+import { DataAnalysis } from '@element-plus/icons-vue'
 </script>
 
 <style>

@@ -3,12 +3,13 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import GraphPage from '../pages/KnowledgeGraphPage/index.vue'
 
 const routes = [
-	{ path: '/', component: GraphPage }
+	{path: '/', redirect: '/graph'},
+	{ path: '/graph', component: GraphPage }
 ]
 
 const router = createRouter({
 	history: createWebHashHistory(),
-	routes: routes
+	routes
 })
 
 export default router
