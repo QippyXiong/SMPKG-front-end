@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Ref, ref, onMounted, getCurrentInstance } from "vue"
-import { ElMessage } from "element-plus"
+import { ElMessage } from 'element-plus'
 
-import knowledgeGraphCanvas from "./components/knowledge-graph-canvas.vue"
-import { Node, Edge } from "./components/knowledge-graph-canvas.vue"
+import knowledgeGraphCanvas from "@/components/knowledge-graph-canvas.vue"
+import { Node, Edge } from "@/components/knowledge-graph-canvas.vue"
 
-import { SearchResponseBody, SearchRecord, RecordType, RelationRecord, EntityRecord } from './types/ResponseBody'
-import { enkeyMapZhkey, getRecordCase, parseEdgePropertiesIntoString, getMainAttrib, parseEdgeSourceOrTarget, getTypeColor, getEntityCategory, getTypeZhkeyMap, parseCandiateProperty, getRelationCategory, enRelationMapZhRelation, zhRelationKeyZhMap } from './types/utils'
-import { entityCategories, entityCategoriesZh } from './types/MaintenanceWorker'
+import { SearchResponseBody, SearchRecord, RecordType, RelationRecord, EntityRecord } from '@/types/ResponseBody'
+import { enkeyMapZhkey, getRecordCase, parseEdgePropertiesIntoString, getMainAttrib, parseEdgeSourceOrTarget, getTypeColor, getEntityCategory, getTypeZhkeyMap, parseCandiateProperty, getRelationCategory, enRelationMapZhRelation, zhRelationKeyZhMap } from '@/types/utils'
+import { entityCategories, entityCategoriesZh } from '@/types/MaintenanceWorker'
 
 interface SelectOption { label: string, value: string }
 
@@ -55,29 +55,6 @@ function parseRecordIntoNode(record: SearchRecord): Node | undefined
         default:
             console.error(`parserRecordIntoNode: unkown type ${ record.type }`)
     }
-}
-
-function parseAttribTableDataNode(node: Node)
-{
-    attribTableData.value = []
-    if(!node.properties || typeof node.properties == 'string') 
-        return
-
-    attribTableData.value = Object.keys(node.properties).flatMap(key => ({
-        attribName: enkeyMapZhkey(key, node.category),
-        value: (node.properties as Record<string, string>)[key]
-    }))
-}
-
-function parseAttribTableDataEdge(edge: Edge)
-{
-    attribTableData.value = []
-    if(!edge.properties) return
-    attribTableData.value = Object.keys(edge.properties).flatMap(key => ({
-        attribName: zhRelationKeyZhMap(key, edge.name as string),
-        value: (edge.properties as Record<string, string>)[key]
-    }))
-    if(!edge.properties) return
 }
 
 function parseRecordIntoEdge(record: SearchRecord): Edge
@@ -185,6 +162,29 @@ async function fetchEntity(type: string, properties: Record<string, string>, rel
                 return void 0
             }
         }).catch(AlertError)
+}
+
+function parseAttribTableDataNode(node: Node)
+{
+    attribTableData.value = []
+    if(!node.properties || typeof node.properties == 'string') 
+        return
+
+    attribTableData.value = Object.keys(node.properties).flatMap(key => ({
+        attribName: enkeyMapZhkey(key, node.category),
+        value: (node.properties as Record<string, string>)[key]
+    }))
+}
+
+function parseAttribTableDataEdge(edge: Edge)
+{
+    attribTableData.value = []
+    if(!edge.properties) return
+    attribTableData.value = Object.keys(edge.properties).flatMap(key => ({
+        attribName: zhRelationKeyZhMap(key, edge.name as string),
+        value: (edge.properties as Record<string, string>)[key]
+    }))
+    if(!edge.properties) return
 }
 
 function seachPerson(): void 
@@ -322,7 +322,6 @@ onMounted(()=>{
 })
 
 import { Search } from '@element-plus/icons-vue'
-import { fa } from "element-plus/es/locale"
 
 </script>
 
@@ -362,10 +361,10 @@ import { fa } from "element-plus/es/locale"
             </div>
             <knowledgeGraphCanvas
                 :tooltipFormatter="
-                    (data) => null
+                    (data: any) => null
                 "
                 :nodeLabelFormatter="
-                    (params) => {
+                    (params: any) => {
                         let data = params.data as Node
                         return getMainAttrib(data.properties as Record<string, any>, data.category)
                     }
@@ -386,7 +385,7 @@ import { fa } from "element-plus/es/locale"
                         size="large"
                         inactive-text="在图谱中显示属性"
                         text-align="left"
-                        @change="el => closeAllPropertyNode(el as boolean)"
+                        @change="(el: any) => closeAllPropertyNode(el as boolean)"
                     />
                     <div>
                     </div>

@@ -132,4 +132,4 @@ export function enRelationMapZhRelation(relation: string)
 	let i = relationCategories.findIndex(v => v == relation)
 	if(i == -1) console.error(`unkown relation: ${ relation }`)
 	return relationCategoriesZh[i]
-}
+}		

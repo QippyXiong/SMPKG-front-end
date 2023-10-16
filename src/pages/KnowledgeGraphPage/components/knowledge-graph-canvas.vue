@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {  Ref, onMounted, onUpdated, ref, watch } from 'vue'
 import * as echarts from 'echarts'
-import { ParamsSerializerOptions } from 'axios';
-import { radioPropsBase } from 'element-plus';
 
 export interface Node {
     name        : string

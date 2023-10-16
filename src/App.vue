@@ -1,9 +1,9 @@
 <template>
   <div class="global-container">
     <ElContainer style="height: 100%;">
-      <ElAside>
+      <ElHeader style="padding: 0px;">
         <ElMenu
-          class="el-menu-vertical-demo"
+          class="el-menu-horizontal-demo"
           background-color="#293246"
           style="height: 100%;"
           text-color="#fff"
@@ -11,19 +11,30 @@
           :collapse="false"
           :default-active="'1'"
           :router="true"
+          mode="horizontal"
         >
         <!--theme #7e9cff-->
           <!--begin logo-->
-          <div style="height: 50px; line-height: 50px;">
-            <span style="color:#fff;">地铁维保人员图谱</span>
-          </div>
+          <ElMenuItem>
+            <div>
+              <span style="color:#fff;">地铁维保人员图谱</span>
+            </div>
+          </ElMenuItem>
           <!--end logo-->
           <ElMenuItem route="/graph" index="1">
             <ElIcon><DataAnalysis/></ElIcon>
-            <span>人员图谱查询</span>
+            <span>图谱数据查询</span>
+          </ElMenuItem>
+          <ElMenuItem route="/person" index="2">
+            <ElIcon><DataAnalysis/></ElIcon>
+            <span>人员能力图谱</span>
+          </ElMenuItem>
+          <ElMenuItem route="/embedding" index="3">
+            <ElIcon><DataAnalysis/></ElIcon>
+            <span>图谱嵌入</span>
           </ElMenuItem>
         </ElMenu>
-      </ElAside>
+      </ElHeader>
       <ElMain style="height: 100%;">
         <ElScrollbar height="100%" view-style="height: 100%;">
           <router-view/>

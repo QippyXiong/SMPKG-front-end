@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {  Ref, onMounted, onUpdated, ref, watch } from 'vue'
 import * as echarts from 'echarts'
+import VChart, { THEME_KEY } from 'vue-echarts'
 
 export interface Node {
     name        : string
@@ -11,6 +12,7 @@ export interface Node {
     itemStyle?  : {
         color: string
     }
+    // draggable?  : boolean
     // label?      : {
     //     show: boolean
     // }
@@ -53,6 +55,7 @@ interface Props {
         left: 'left' | 'right' | 'center' | 'auto' | string
     }
     categories?: Array<Category>
+    draggable?: boolean
     tooltipFormatter?:  (params: TooltipFormatterParams) => string | null | Element
     nodeLabelFormatter?: (params: any) => string
 }
@@ -61,6 +64,7 @@ const props = withDefaults(defineProps<Props>(), {
     width: '100%',
     height: '100%',
     repulsion: 400,
+    draggable: true,
     categories: props => [],
     title: props => { return {
         text: '',
@@ -100,7 +104,7 @@ function get_option( nodes: Array<Node>, links: Array<Edge> ) : echarts.EChartsC
                 edgeLength:[80,400]
             },
             roam:true,
-            draggable: true,
+            draggable: props.draggable,
             label: {
                 show: true, // top / left / right / bottom / inside / insideLeft / insideRight / insideTop / insideBottom / insideTopLeft / insideBottomLeft / insideTopRight / insideBottomRight
                 // position: 'center',
