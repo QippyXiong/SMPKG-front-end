@@ -12,6 +12,8 @@ export interface Node {
     itemStyle?  : {
         color: string
     }
+    x?: string,
+    y?: string,
     // draggable?  : boolean
     // label?      : {
     //     show: boolean
@@ -38,7 +40,7 @@ const p: Ref<null|HTMLDivElement> = ref(null)
 export interface Category
 {
     name: string,
-    itemStyle: {
+    itemStyle?: {
         color: string
     }
 }

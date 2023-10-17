@@ -26,7 +26,7 @@ const relationTableData :Ref<Array<{ relation: string }>> = ref([])
 const selectOptions: Ref<SelectOption[]> = ref([])
 const subSelectOptions: Ref<SelectOption[]> = ref([])
 const focused_node: Ref<Node|null> = ref(null)
-const showPropertyNodeInGraph: Ref<boolean> = ref(true)
+const showPropertyNodeInGraph: Ref<boolean> = ref(false)
 const categories: Ref<any> = ref([])
 
 let categoryRelationsMap: Record<string, string[]> = {}
@@ -423,4 +423,3 @@ import { Search } from '@element-plus/icons-vue'
   background-color: var(--el-fill-color-blank);
 }
 </style>
-./types/MaintenanceWorkerEntities

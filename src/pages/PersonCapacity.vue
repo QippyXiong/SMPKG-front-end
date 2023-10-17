@@ -61,6 +61,8 @@ import { entityCategories, entityCategoriesZh } from '@/types/MaintenanceWorker'
 
 import { parseSearchEntityResponseData } from '@/types/functions'
 
+import { ECBasicOption } from 'echarts/types/dist/shared'
+
 
 const attribTableData   :Ref<Array<{ attribName: string, value: string }>> = ref([])
 
@@ -98,7 +100,7 @@ let radarIndicator = [
 		{ name: 'Marketing', max: 5 }
 ]
 
-let RadarOption = {
+let RadarOption: ECBasicOption = {
 	type: 'radar',
 	radar: {
 		indicator: radarIndicator,
@@ -111,8 +113,8 @@ let RadarOption = {
 	}]
 }
 
-let rates = ['aaa', '初级', '中级', '高级', '资深', '专家']
-let rateMapLevel = {}
+let rates = ['未知', '初级', '中级', '高级', '资深', '专家']
+let rateMapLevel: Record<string, string | number> = {}
 
 rates.forEach((v, i)=>{
 	rateMapLevel[v] = i
@@ -125,7 +127,7 @@ function search()
 		headers: {
 			'Content-Type': 'application/json'
 		}, body: JSON.stringify({
-			properties: { id: personId.value }, 
+			properties: { uid: personId.value }, 
 			relation: 'CapacityRate'
 		})
 	})
@@ -138,17 +140,16 @@ function search()
 					name: personId.value,
 					value: []
 				}]
-				for(let record of data) {
-					if(record.type === 'Capacity') {
-						record = record
-						console.log(record)
+				for(let item of data) {
+					
+					if(item.type === 'Capacity') {
 						radarIndicator.push({
-							name: record.record.record.name,
+							name: (item.record as EntityRecord)?.record?.name || '未知能力',
 							max: 6
 						})
-					} else if(record.type === 'CapacityRate') {
-						console.log('Rate', record.record.properties.level)
-						radarData[0].value.push(rateMapLevel[record.record.properties.level])
+					} else if(item.type === 'CapacityRate') {
+						console.log('Rate', item.record.properties.level)
+						radarData[0].value.push(rateMapLevel[item.record.properties.level] as number)
 					}
 				}
 				RadarOption = {
@@ -177,7 +178,7 @@ function search()
 		headers: {
 			'Content-Type': 'application/json'
 		}, body: JSON.stringify({
-			properties: { id: personId.value }, 
+			properties: { uid: personId.value }, 
 			relation: 'None'
 		})
 	})
