@@ -4,7 +4,7 @@
 
 interface MaintenanceWorker 
 {
-	id 				: string 	// # 工号/志愿者编号
+	uid 				: string 	// # 工号/志愿者编号
 	name			: string 	// # 姓名
 	sex 			: string 	// # 性别
 	nation			: string 	// # 民族
@@ -66,7 +66,7 @@ let type_map: Record<string, Record<string, string>> =
 {
 	MaintenanceWorker: 
 	{
-		id 				: "工号/志愿者编号",
+		uid 				: "工号/志愿者编号",
 		name			: "姓名",
 		sex 			: "性别",
 		nation			: "民族",
@@ -112,7 +112,7 @@ let type_map: Record<string, Record<string, string>> =
 }
 
 let candidateKeyMap: Record<string, string[]> = {
-	MaintenanceWorker: 	["id"],
+	MaintenanceWorker: 	["uid"],
 	MaintenanceRecord: 	["malfunction", "place", "malfunc_time"], // wait
 	Capacity:			["name"]
 }

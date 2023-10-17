@@ -72,7 +72,7 @@ export function getMainAttrib(record: Record<string, any> | undefined, type: str
 	if(!record) return 'undefined'
 	if(typeof type === 'number') type = getEntityCategory(type)
 	switch(type) {
-		case 'MaintenanceWorker': return String(record["id"])
+		case 'MaintenanceWorker': return String(record["uid"])
 		case 'MaintenanceRecord': return record["malfunction"]
 		case 'Capacity': return String(record["name"])
 		case 'Property': return String(record)
