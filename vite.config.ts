@@ -23,7 +23,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/llm': 'http://127.0.0.1:5200',
+      '/llm': {
+        target: 'http://127.0.0.1:5200',
+        changeOrigin: true,
+      },
       '/search': 'http://127.0.0.1:5200'
     }
   }

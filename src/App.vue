@@ -27,11 +27,11 @@
           </ElMenuItem>
           <ElMenuItem route="/person" index="2">
             <ElIcon><DataAnalysis/></ElIcon>
-            <span>人员能力图谱</span>
+            <span>人员能力展示</span>
           </ElMenuItem>
           <ElMenuItem route="/embedding" index="3">
             <ElIcon><DataAnalysis/></ElIcon>
-            <span>图谱嵌入</span>
+            <span>数据预处理</span>
           </ElMenuItem>
         </ElMenu>
       </ElHeader>

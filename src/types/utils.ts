@@ -37,7 +37,10 @@ export function enkeyMapZhkey(attribName: string, type: string | number): string
 	if(key_map) {
 		let key = key_map[attribName]
 		if(key === void 0)
+		{
 			console.error(`No such atrribute ${ attribName } in ${ type }`)
+			return attribName
+		}
 		return key
 	}else{
 
